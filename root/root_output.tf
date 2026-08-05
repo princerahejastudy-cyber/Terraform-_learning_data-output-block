@@ -25,4 +25,10 @@ output "public_ips" {
   value = module.public_ip.output_publicip
 }
 
+output "nic_output" {
+  value = module.nic.nic_output
+}
 
+output "bastion_output" {
+  value = module.bastion.bastion_output
+}
