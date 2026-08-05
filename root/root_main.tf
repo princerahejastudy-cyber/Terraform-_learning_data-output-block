@@ -6,32 +6,47 @@ module "vnet" {
 
 
 module "subnet" {
-  source = "../child/subnet"
+  source              = "../child/subnet"
   resource_group_name = var.resource_group_name
   #child variable = root varaible -->> TFVars
-  vnets = module.vnet.output_vnets
+  vnets   = module.vnet.output_vnets
   subnets = var.subnets
 }
 
 
 module "nsg" {
-  source= "../child/nsg"
+  source              = "../child/nsg"
   resource_group_name = var.resource_group_name
-  nsg =var.nsg
-  subnets = module.subnet.output_subnets
-  nsg_rule = var.nsg_rules
+  nsg                 = var.nsg
+  subnets             = module.subnet.output_subnets
+  nsg_rule            = var.nsg_rules
 }
 
 module "public_ip" {
-  source = "../child/PublicIp"
+  source              = "../child/PublicIp"
   resource_group_name = var.resource_group_name
-  publicip_tf_code = var.public_ip_root
+  publicip_tf_code    = var.public_ip_root
 }
 
 module "nat_gw" {
-  source ="../child/natgateway"
+  source              = "../child/natgateway"
   resource_group_name = var.resource_group_name
-  nat_gw_tf=var.nat_gw_tf_root
-  subnets = module.subnet.output_subnets
-  public_ip = module.public_ip.output_publicip
+  nat_gw_tf           = var.nat_gw_tf_root
+  subnets             = module.subnet.output_subnets
+  public_ip           = module.public_ip.output_publicip
+}
+
+module "nic"{
+  source = "../child/nic"
+  resource_group_name = var.resource_group_name
+  subnet_id = module.subnet.output_subnets
+  nic=var.nic_tf_root
+}
+
+module "bastion" {
+  source = "../child/bastion"
+  resource_group_name = var.resource_group_name
+  bastion_host = var.bastion_host_root
+  public_ip_address_id = module.public_ip.output_publicip
+  virtual_network_name=module.vnet.output_vnets
 }

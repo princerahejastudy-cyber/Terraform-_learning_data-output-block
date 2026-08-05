@@ -13,15 +13,17 @@ variable "vnets" {
 
 
 variable "subnets" {
-#   description = "Subnets to create"
-#   type = map(object({
-#   name             = string
-#   vnet_key         = string
-#   address_prefixes = list(string)
-# }))
+  #   description = "Subnets to create"
+  #   type = map(object({
+  #   name             = string
+  #   vnet_key         = string
+  #   address_prefixes = list(string)
+  # }))
 }
 
 variable "nsg" {}
 variable "nsg_rules" {}
 variable "public_ip_root" {}
-variable "nat_gw_tf_root"{}
+variable "nat_gw_tf_root" {}
+variable "nic_tf_root" {}
+variable "bastion_host_root"{}
