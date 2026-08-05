@@ -1,0 +1,78 @@
+digraph G {
+  rankdir = "RL";
+  node [shape = rect, fontname = "sans-serif"];
+  subgraph "cluster_module.bastion" {
+    label = "module.bastion"
+    fontname = "sans-serif"
+    "module.bastion.data.azurerm_resource_group.rg" [label="data.azurerm_resource_group.rg"];
+    "module.bastion.azurerm_bastion_host.bastion_host" [label="azurerm_bastion_host.bastion_host"];
+    "module.bastion.azurerm_subnet.bastion_subnet" [label="azurerm_subnet.bastion_subnet"];
+  }
+  subgraph "cluster_module.nat_gw" {
+    label = "module.nat_gw"
+    fontname = "sans-serif"
+    "module.nat_gw.data.azurerm_resource_group.rg" [label="data.azurerm_resource_group.rg"];
+    "module.nat_gw.azurerm_nat_gateway.nat_gw_tf" [label="azurerm_nat_gateway.nat_gw_tf"];
+    "module.nat_gw.azurerm_nat_gateway_public_ip_association.natgw_publicip_assoc" [label="azurerm_nat_gateway_public_ip_association.natgw_publicip_assoc"];
+    "module.nat_gw.azurerm_subnet_nat_gateway_association.natgw_assoc" [label="azurerm_subnet_nat_gateway_association.natgw_assoc"];
+  }
+  subgraph "cluster_module.nic" {
+    label = "module.nic"
+    fontname = "sans-serif"
+    "module.nic.data.azurerm_resource_group.rg" [label="data.azurerm_resource_group.rg"];
+    "module.nic.azurerm_network_interface.nic_tf" [label="azurerm_network_interface.nic_tf"];
+  }
+  subgraph "cluster_module.nsg" {
+    label = "module.nsg"
+    fontname = "sans-serif"
+    "module.nsg.data.azurerm_resource_group.rg" [label="data.azurerm_resource_group.rg"];
+    "module.nsg.azurerm_network_security_group.nsg" [label="azurerm_network_security_group.nsg"];
+    "module.nsg.azurerm_network_security_rule.nsg_rule" [label="azurerm_network_security_rule.nsg_rule"];
+    "module.nsg.azurerm_subnet_network_security_group_association.nsg_associaiton" [label="azurerm_subnet_network_security_group_association.nsg_associaiton"];
+  }
+  subgraph "cluster_module.public_ip" {
+    label = "module.public_ip"
+    fontname = "sans-serif"
+    "module.public_ip.data.azurerm_resource_group.rg" [label="data.azurerm_resource_group.rg"];
+    "module.public_ip.azurerm_public_ip.publicip_tf_code" [label="azurerm_public_ip.publicip_tf_code"];
+  }
+  subgraph "cluster_module.subnet" {
+    label = "module.subnet"
+    fontname = "sans-serif"
+    "module.subnet.data.azurerm_resource_group.rg" [label="data.azurerm_resource_group.rg"];
+    "module.subnet.azurerm_subnet.subnet" [label="azurerm_subnet.subnet"];
+  }
+  subgraph "cluster_module.vm" {
+    label = "module.vm"
+    fontname = "sans-serif"
+    "module.vm.data.azurerm_resource_group.rg" [label="data.azurerm_resource_group.rg"];
+    "module.vm.azurerm_linux_virtual_machine.virtual_machine" [label="azurerm_linux_virtual_machine.virtual_machine"];
+  }
+  subgraph "cluster_module.vnet" {
+    label = "module.vnet"
+    fontname = "sans-serif"
+    "module.vnet.data.azurerm_resource_group.rg" [label="data.azurerm_resource_group.rg"];
+    "module.vnet.azurerm_virtual_network.vnet" [label="azurerm_virtual_network.vnet"];
+  }
+  "module.bastion.azurerm_bastion_host.bastion_host" -> "module.bastion.azurerm_subnet.bastion_subnet";
+  "module.bastion.azurerm_bastion_host.bastion_host" -> "module.public_ip.azurerm_public_ip.publicip_tf_code";
+  "module.bastion.azurerm_subnet.bastion_subnet" -> "module.bastion.data.azurerm_resource_group.rg";
+  "module.bastion.azurerm_subnet.bastion_subnet" -> "module.vnet.azurerm_virtual_network.vnet";
+  "module.nat_gw.azurerm_nat_gateway.nat_gw_tf" -> "module.nat_gw.data.azurerm_resource_group.rg";
+  "module.nat_gw.azurerm_nat_gateway_public_ip_association.natgw_publicip_assoc" -> "module.nat_gw.azurerm_nat_gateway.nat_gw_tf";
+  "module.nat_gw.azurerm_nat_gateway_public_ip_association.natgw_publicip_assoc" -> "module.public_ip.azurerm_public_ip.publicip_tf_code";
+  "module.nat_gw.azurerm_subnet_nat_gateway_association.natgw_assoc" -> "module.nat_gw.azurerm_nat_gateway.nat_gw_tf";
+  "module.nat_gw.azurerm_subnet_nat_gateway_association.natgw_assoc" -> "module.subnet.azurerm_subnet.subnet";
+  "module.nic.azurerm_network_interface.nic_tf" -> "module.nic.data.azurerm_resource_group.rg";
+  "module.nic.azurerm_network_interface.nic_tf" -> "module.subnet.azurerm_subnet.subnet";
+  "module.nsg.azurerm_network_security_group.nsg" -> "module.nsg.data.azurerm_resource_group.rg";
+  "module.nsg.azurerm_network_security_rule.nsg_rule" -> "module.nsg.azurerm_network_security_group.nsg";
+  "module.nsg.azurerm_subnet_network_security_group_association.nsg_associaiton" -> "module.nsg.azurerm_network_security_group.nsg";
+  "module.nsg.azurerm_subnet_network_security_group_association.nsg_associaiton" -> "module.subnet.azurerm_subnet.subnet";
+  "module.public_ip.azurerm_public_ip.publicip_tf_code" -> "module.public_ip.data.azurerm_resource_group.rg";
+  "module.subnet.azurerm_subnet.subnet" -> "module.subnet.data.azurerm_resource_group.rg";
+  "module.subnet.azurerm_subnet.subnet" -> "module.vnet.azurerm_virtual_network.vnet";
+  "module.vm.azurerm_linux_virtual_machine.virtual_machine" -> "module.nic.azurerm_network_interface.nic_tf";
+  "module.vm.azurerm_linux_virtual_machine.virtual_machine" -> "module.vm.data.azurerm_resource_group.rg";
+  "module.vnet.azurerm_virtual_network.vnet" -> "module.vnet.data.azurerm_resource_group.rg";
+}

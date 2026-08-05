@@ -26,4 +26,5 @@ variable "nsg_rules" {}
 variable "public_ip_root" {}
 variable "nat_gw_tf_root" {}
 variable "nic_tf_root" {}
-variable "bastion_host_root"{}
+variable "bastion_host_root" {}
+variable "virtual_machine_root" {}

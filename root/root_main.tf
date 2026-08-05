@@ -36,17 +36,24 @@ module "nat_gw" {
   public_ip           = module.public_ip.output_publicip
 }
 
-module "nic"{
-  source = "../child/nic"
+module "nic" {
+  source              = "../child/nic"
   resource_group_name = var.resource_group_name
-  subnet_id = module.subnet.output_subnets
-  nic=var.nic_tf_root
+  subnet_id           = module.subnet.output_subnets
+  nic                 = var.nic_tf_root
 }
 
 module "bastion" {
-  source = "../child/bastion"
-  resource_group_name = var.resource_group_name
-  bastion_host = var.bastion_host_root
+  source               = "../child/bastion"
+  resource_group_name  = var.resource_group_name
+  bastion_host         = var.bastion_host_root
   public_ip_address_id = module.public_ip.output_publicip
-  virtual_network_name=module.vnet.output_vnets
+  virtual_network_name = module.vnet.output_vnets
+}
+
+module "vm" {
+  source                = "../child/compute"
+  resource_group_name   = var.resource_group_name
+  virtual_machine       = var.virtual_machine_root
+  network_interface_ids = module.nic.nic_output
 }

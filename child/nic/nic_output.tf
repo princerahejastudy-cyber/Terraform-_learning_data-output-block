@@ -4,6 +4,7 @@ output "nic_output" {
     k => {
       id   = nic.id
       name = nic.name
+      private_ip = nic.private_ip_address
     }
   }
 }
