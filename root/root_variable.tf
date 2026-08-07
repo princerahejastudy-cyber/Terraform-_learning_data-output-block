@@ -28,3 +28,5 @@ variable "nat_gw_tf_root" {}
 variable "nic_tf_root" {}
 variable "bastion_host_root" {}
 variable "virtual_machine_root" {}
+variable "loadbalancers" {}
+variable "nat_rules" {}

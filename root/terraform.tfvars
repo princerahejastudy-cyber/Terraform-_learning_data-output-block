@@ -1,4 +1,4 @@
-resource_group_name = "kml_rg_main-f85bad4f183a44e7"
+resource_group_name = "kml_rg_main-997a7f1373ae4b65"
 
 vnets = {
 
@@ -74,8 +74,32 @@ nsg_rules = {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
-
+  allow_http1 = {
+    nsg_key                    = "nsg1"
+    name                       = "Allow-HTTP"
+    priority                   = 110
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+  allow_http2 = {
+    nsg_key                    = "nsg2"
+    name                       = "Allow-HTTP"
+    priority                   = 110
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
+
 
 public_ip_root = {
   publicip1 = {
@@ -98,7 +122,13 @@ public_ip_root = {
     allocation_method = "Static"
     sku               = "Standard"
   }
+  publicip5 = {
+    name              = "Loab_Balancer_Public_IP"
+    allocation_method = "Static"
+    sku               = "Standard"
+  }
 }
+
 
 nat_gw_tf_root = {
   natgw1 = {
@@ -150,45 +180,123 @@ bastion_host_root = {
 
 virtual_machine_root = {
   vm1 = {
-    name           = "Frontend-vm1"           
-    size           = "Standard_D2s_v3"         
-    admin_username = "adminuser"
-    nic_key        = "nic1"
-    admin_password = "Uddish@786"
-    caching = "ReadWrite" 
-    publisher = "Canonical"
-    offer     = "UbuntuServer"   
-    sku       = "16.04-LTS"      
-    version   ="latest"
-    disable_password_authentication="false"
-    storage_account_type    = "Standard_LRS"
+    name                            = "Frontend-vm1"
+    size                            = "Standard_D2s_v3"
+    admin_username                  = "adminuser"
+    nic_key                         = "nic1"
+    admin_password                  = "Uddish@786"
+    caching                         = "ReadWrite"
+    publisher                       = "Canonical"
+    offer                           = "UbuntuServer"
+    sku                             = "16.04-LTS"
+    version                         = "latest"
+    disable_password_authentication = "false"
+    storage_account_type            = "Standard_LRS"
   }
   vm2 = {
-    name           = "Frontend-vm2"           
-    size           = "Standard_D2s_v3"         
-    admin_username = "adminuser"
-    nic_key        = "nic2"
-    admin_password = "Uddish@786"
-    caching = "ReadWrite" 
-    publisher = "Canonical"
-    offer     = "UbuntuServer"   
-    sku       = "16.04-LTS"      
-    version   ="latest"
-    disable_password_authentication="false"
-    storage_account_type    = "Standard_LRS"
+    name                            = "Frontend-vm2"
+    size                            = "Standard_D2s_v3"
+    admin_username                  = "adminuser"
+    nic_key                         = "nic2"
+    admin_password                  = "Uddish@786"
+    caching                         = "ReadWrite"
+    publisher                       = "Canonical"
+    offer                           = "UbuntuServer"
+    sku                             = "16.04-LTS"
+    version                         = "latest"
+    disable_password_authentication = "false"
+    storage_account_type            = "Standard_LRS"
   }
   vm3 = {
-    name           = "Bacbken-vm2"           
-    size           = "Standard_D2s_v3"         
-    admin_username = "adminuser"
-    nic_key        = "nic3"
-    admin_password = "Uddish@786"
-    caching = "ReadWrite" 
-    publisher = "Canonical"
-    offer     = "UbuntuServer"   
-    sku       = "16.04-LTS"      
-    version   ="latest"
-    disable_password_authentication="false"
-    storage_account_type    = "Standard_LRS"
+    name                            = "Bacbken-vm2"
+    size                            = "Standard_D2s_v3"
+    admin_username                  = "adminuser"
+    nic_key                         = "nic3"
+    admin_password                  = "Uddish@786"
+    caching                         = "ReadWrite"
+    publisher                       = "Canonical"
+    offer                           = "UbuntuServer"
+    sku                             = "16.04-LTS"
+    version                         = "latest"
+    disable_password_authentication = "false"
+    storage_account_type            = "Standard_LRS"
   }
+}
+
+
+loadbalancers = {
+
+  lb1 = {
+
+    name = "frontend-lb"
+
+    sku = "Standard"
+
+    sku_tier = "Regional"
+
+    public_ip_key = "publicip5"
+
+    frontend_name = "frontend-ip"
+
+    backend_pool_name = "backend-pool"
+
+    probe_name = "http-probe"
+
+    probe_port = 80
+
+    rule_name = "http-rule"
+
+    protocol = "Tcp"
+
+    frontend_port = 80
+
+    backend_port = 80
+
+    nic_keys = [
+      "nic1",
+      "nic2"
+    ]
+
+  }
+
+}
+
+nat_rules = {
+
+  vm1 = {
+
+    lb_key = "lb1"
+
+    nic_key = "nic1"
+
+    name = "ssh-vm1"
+
+    protocol = "Tcp"
+
+    frontend_port = 50001
+
+    backend_port = 22
+
+    frontend_ip_config_name = "frontend-ip"
+
+  }
+
+  vm2 = {
+
+    lb_key = "lb1"
+
+    nic_key = "nic2"
+
+    name = "ssh-vm2"
+
+    protocol = "Tcp"
+
+    frontend_port = 50002
+
+    backend_port = 22
+
+    frontend_ip_config_name = "frontend-ip"
+
+  }
+
 }
