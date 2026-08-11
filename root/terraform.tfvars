@@ -127,6 +127,11 @@ public_ip_root = {
     allocation_method = "Static"
     sku               = "Standard"
   }
+  publicip6 = {
+    name              = "Loab_Balancer2_Public_IP"
+    allocation_method = "Static"
+    sku               = "Standard"
+  }
 }
 
 
