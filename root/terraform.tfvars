@@ -1,4 +1,4 @@
-resource_group_name = "kml_rg_main-126a39703b8943f9"
+resource_group_name = "kml_rg_main-c5539f4fa20649b3"
 
 vnets = {
 
