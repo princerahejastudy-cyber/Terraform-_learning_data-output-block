@@ -5,6 +5,7 @@ output "output_publicip" {
     key => {
       id   = pip.id
       name = pip.name
+      ip_address = pip.ip_address
     }
   }
 }

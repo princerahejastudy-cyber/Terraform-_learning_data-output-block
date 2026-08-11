@@ -1,9 +1,11 @@
 # Terraform working directory
 .terraform/
+.documents/
 
 # Terraform state files
 *.tfstate
 *.tfstate.*
+*.docx.*
 
 # Crash logs
 crash.log
