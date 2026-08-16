@@ -1,4 +1,4 @@
-resource_group_name = "kml_rg_main-c5539f4fa20649b3"
+resource_group_name = "kml_rg_main-cc8983c1ffff4cd9"
 
 vnets = {
 
@@ -29,7 +29,13 @@ subnets = {
     vnet_key         = "vnet2"
     address_prefixes = ["20.0.1.0/24"]
   }
+  subnet_appgw = {
+    name             = "dev-subnet-AppGateway"
+    vnet_key         = "vnet1"
+    address_prefixes = ["10.0.4.0/24"]
+  }
 }
+
 
 
 nsg = {
@@ -132,7 +138,13 @@ public_ip_root = {
     allocation_method = "Static"
     sku               = "Standard"
   }
+  publicip_appgw = {
+    name              = "dev-appgw-publicip"
+    allocation_method = "Static"
+    sku               = "Standard"
+  }
 }
+
 
 
 nat_gw_tf_root = {
@@ -305,3 +317,47 @@ nat_rules = {
   }
 
 }
+
+appgateways = {
+  appgw1 = {
+    name          = "dev-appgateway"
+    sku_name      = "Standard_v2"
+    sku_tier      = "Standard_v2"
+    sku_capacity  = 2
+    subnet_key    = "subnet_appgw"
+    public_ip_key = "publicip_appgw"
+
+    backend_pools = {
+      images = {
+        name     = "images-backend-pool"
+        nic_keys = ["nic1"]
+      }
+      videos = {
+        name     = "videos-backend-pool"
+        nic_keys = ["nic2"]
+      }
+    }
+
+    http_settings = {
+      name                  = "http-setting"
+      cookie_based_affinity = "Disabled"
+      port                  = 80
+      protocol              = "Http"
+      request_timeout       = 20
+    }
+
+    path_rules = {
+      images = {
+        name             = "images-rule"
+        paths            = ["/images/*"]
+        backend_pool_key = "images"
+      }
+      videos = {
+        name             = "videos-rule"
+        paths            = ["/videos/*"]
+        backend_pool_key = "videos"
+      }
+    }
+  }
+}
+

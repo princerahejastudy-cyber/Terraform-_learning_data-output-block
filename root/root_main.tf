@@ -58,11 +58,20 @@ module "vm" {
   network_interface_ids = module.nic.nic_output
 }
 
-module "loadbalancer" {
-  source              = "../child/loadbalance"
+#module "loadbalancer" {
+#source              = "../child/loadbalance"
+#resource_group_name = var.resource_group_name
+#loadbalancers       = var.loadbalancers
+#public_ips          = module.public_ip.output_publicip
+#nics                = module.nic.nic_output
+#nat_rules           = var.nat_rules
+#}
+
+module "appgw" {
+  source              = "../child/appgw"
   resource_group_name = var.resource_group_name
-  loadbalancers       = var.loadbalancers
+  appgateways         = var.appgateways
+  subnets             = module.subnet.output_subnets
   public_ips          = module.public_ip.output_publicip
   nics                = module.nic.nic_output
-  nat_rules           = var.nat_rules
 }

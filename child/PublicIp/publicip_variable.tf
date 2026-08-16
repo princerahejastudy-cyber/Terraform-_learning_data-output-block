@@ -1,2 +1,2 @@
-variable "resource_group_name"{}
-variable "publicip_tf_code"{}
+variable "resource_group_name" {}
+variable "publicip_tf_code" {}

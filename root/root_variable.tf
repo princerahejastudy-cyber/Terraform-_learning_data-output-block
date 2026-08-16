@@ -30,3 +30,4 @@ variable "bastion_host_root" {}
 variable "virtual_machine_root" {}
 variable "loadbalancers" {}
 variable "nat_rules" {}
+variable "appgateways" {}

@@ -99,19 +99,19 @@ resource "azurerm_network_interface_backend_address_pool_association" "associati
 
 
 resource "azurerm_lb_nat_rule" "nat_rule" {
-    for_each = var.nat_rules
-    resource_group_name = data.azurerm_resource_group.rg.name
-    loadbalancer_id = azurerm_lb.lb[each.value.lb_key].id
-    name = each.value.name
-    protocol = each.value.protocol
-    frontend_port = each.value.frontend_port
-    backend_port = each.value.backend_port
-    frontend_ip_configuration_name = each.value.frontend_ip_config_name
+  for_each                       = var.nat_rules
+  resource_group_name            = data.azurerm_resource_group.rg.name
+  loadbalancer_id                = azurerm_lb.lb[each.value.lb_key].id
+  name                           = each.value.name
+  protocol                       = each.value.protocol
+  frontend_port                  = each.value.frontend_port
+  backend_port                   = each.value.backend_port
+  frontend_ip_configuration_name = each.value.frontend_ip_config_name
 }
 
 resource "azurerm_network_interface_nat_rule_association" "nat_association" {
-    for_each = var.nat_rules
-    network_interface_id = var.nics[each.value.nic_key].id
-    ip_configuration_name = "internal"
-    nat_rule_id = azurerm_lb_nat_rule.nat_rule[each.key].id
+  for_each              = var.nat_rules
+  network_interface_id  = var.nics[each.value.nic_key].id
+  ip_configuration_name = "internal"
+  nat_rule_id           = azurerm_lb_nat_rule.nat_rule[each.key].id
 }
