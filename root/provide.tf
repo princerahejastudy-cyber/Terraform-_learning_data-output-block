@@ -10,12 +10,12 @@ terraform {
   }
 
 
-  backend "azurerm" {
-    resource_group_name  = "kml_rg_main-c5539f4fa20649b3"
-    storage_account_name = "prince123456789"
-    container_name       = "prince123456789"
-    key                  = "terraform.tfstate"
-  }
+  # backend "azurerm" {
+  #   resource_group_name  = "kml_rg_main-cc8983c1ffff4cd9"
+  #   storage_account_name = "prince123456789"
+  #   container_name       = "prince123456789"
+  #   key                  = "terraform.tfstate"
+  # }
 }
 
 

@@ -32,3 +32,7 @@ output "nic_output" {
 output "bastion_output" {
   value = module.bastion.bastion_output
 }
+
+output "appgw_output" {
+  value = module.appgw.appgw_output
+}
