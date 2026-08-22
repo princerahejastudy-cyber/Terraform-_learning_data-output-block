@@ -1,4 +1,4 @@
-resource_group_name = "kml_rg_main-cc8983c1ffff4cd9"
+resource_group_name = "kml_rg_main-fceed7684fcc4dc4"
 
 vnets = {
 
@@ -7,7 +7,7 @@ vnets = {
     address_space = ["10.0.0.0/16"]
   }
   vnet2 = {
-    name          = "test-vnet"
+    name          = "Hub-vnet"
     address_space = ["20.0.0.0/16"]
   }
 
@@ -25,15 +25,15 @@ subnets = {
     address_prefixes = ["10.0.2.0/24"]
   }
   subnet3 = {
-    name             = "Test-subnet-Test"
+    name             = "Hub-subnet"
     vnet_key         = "vnet2"
     address_prefixes = ["20.0.1.0/24"]
   }
-  subnet_appgw = {
-    name             = "dev-subnet-AppGateway"
-    vnet_key         = "vnet1"
-    address_prefixes = ["10.0.4.0/24"]
-  }
+  # subnet_appgw = {
+  #   name             = "dev-subnet-AppGateway"
+  #   vnet_key         = "vnet1"
+  #   address_prefixes = ["10.0.4.0/24"]
+  # }
 }
 
 
@@ -48,7 +48,7 @@ nsg = {
     subnet_key = "subnet2"
   }
   nsg3 = {
-    name       = "Test-subnet-Test-nsg"
+    name       = "Hub-subnet-Hub-nsg"
     subnet_key = "subnet3"
   }
 }
@@ -119,12 +119,12 @@ public_ip_root = {
     sku               = "StandardV2"
   }
   publicip3 = {
-    name              = "Test-subnet-Test-publicip3-natgw"
+    name              = "Hub-subnet-Hub-publicip3-natgw"
     allocation_method = "Static"
     sku               = "StandardV2"
   }
   publicip4 = {
-    name              = "Dev-publicip4-bastion"
+    name              = "Hub-publicip4-bastion"
     allocation_method = "Static"
     sku               = "Standard"
   }
@@ -133,16 +133,16 @@ public_ip_root = {
     allocation_method = "Static"
     sku               = "Standard"
   }
-  publicip6 = {
-    name              = "Loab_Balancer2_Public_IP"
-    allocation_method = "Static"
-    sku               = "Standard"
-  }
-  publicip_appgw = {
-    name              = "dev-appgw-publicip"
-    allocation_method = "Static"
-    sku               = "Standard"
-  }
+  # publicip6 = {
+  #   name              = "Loab_Balancer2_Public_IP"
+  #   allocation_method = "Static"
+  #   sku               = "Standard"
+  # }
+  # publicip_appgw = {
+  #   name              = "dev-appgw-publicip"
+  #   allocation_method = "Static"
+  #   sku               = "Standard"
+  # }
 }
 
 
@@ -161,7 +161,7 @@ nat_gw_tf_root = {
     subnet_key    = "subnet2"
   }
   natgw3 = {
-    name          = "Test-subnet-Test-natgw"
+    name          = "Hub-subnet-Hub-natgw"
     public_ip_key = "publicip3"
     sku           = "StandardV2"
     subnet_key    = "subnet3"
@@ -188,10 +188,10 @@ nic_tf_root = {
 
 bastion_host_root = {
   bastion1 = {
-    name             = "dev-bastion-host"
+    name             = "Hub-bastion-host"
     public_ip_key    = "publicip4"
-    vnet_key         = "vnet1"
-    address_prefixes = ["10.0.3.0/24"]
+    vnet_key         = "vnet2"
+    address_prefixes = ["20.0.3.0/24"]
   }
 }
 
@@ -318,46 +318,56 @@ nat_rules = {
 
 }
 
-appgateways = {
-  appgw1 = {
-    name          = "dev-appgateway"
-    sku_name      = "Standard_v2"
-    sku_tier      = "Standard_v2"
-    sku_capacity  = 2
-    subnet_key    = "subnet_appgw"
-    public_ip_key = "publicip_appgw"
+# appgateways = {
+#   appgw1 = {
+#     name          = "dev-appgateway"
+#     sku_name      = "Standard_v2"
+#     sku_tier      = "Standard_v2"
+#     sku_capacity  = 2
+#     subnet_key    = "subnet_appgw"
+#     public_ip_key = "publicip_appgw"
 
-    backend_pools = {
-      images = {
-        name     = "images-backend-pool"
-        nic_keys = ["nic1"]
-      }
-      videos = {
-        name     = "videos-backend-pool"
-        nic_keys = ["nic2"]
-      }
-    }
+#     backend_pools = {
+#       images = {
+#         name     = "images-backend-pool"
+#         nic_keys = ["nic1"]
+#       }
+#       videos = {
+#         name     = "videos-backend-pool"
+#         nic_keys = ["nic2"]
+#       }
+#     }
 
-    http_settings = {
-      name                  = "http-setting"
-      cookie_based_affinity = "Disabled"
-      port                  = 80
-      protocol              = "Http"
-      request_timeout       = 20
-    }
+#     http_settings = {
+#       name                  = "http-setting"
+#       cookie_based_affinity = "Disabled"
+#       port                  = 80
+#       protocol              = "Http"
+#       request_timeout       = 20
+#     }
 
-    path_rules = {
-      images = {
-        name             = "images-rule"
-        paths            = ["/images/*"]
-        backend_pool_key = "images"
-      }
-      videos = {
-        name             = "videos-rule"
-        paths            = ["/videos/*"]
-        backend_pool_key = "videos"
-      }
-    }
+#     path_rules = {
+#       images = {
+#         name             = "images-rule"
+#         paths            = ["/images/*"]
+#         backend_pool_key = "images"
+#       }
+#       videos = {
+#         name             = "videos-rule"
+#         paths            = ["/videos/*"]
+#         backend_pool_key = "videos"
+#       }
+#     }
+#   }
+# }
+
+peerings = {
+  vnet1_to_vnet2 = {
+    vnet_key        = "vnet1"
+    remote_vnet_key = "vnet2"
+  }
+  vnet2_to_vnet1 = {
+    vnet_key        = "vnet2"
+    remote_vnet_key = "vnet1"
   }
 }
-

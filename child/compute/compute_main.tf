@@ -20,4 +20,31 @@ resource "azurerm_linux_virtual_machine" "virtual_machine" {
     sku       = each.value.sku       #TFvars
     version   = each.value.version   #TFvars
   }
+  custom_data = base64encode(<<-EOF
+    #!/bin/bash
+
+    apt-get update -y
+    apt-get install -y nginx
+
+    systemctl enable nginx
+    systemctl start nginx
+
+    cat > /var/www/html/index.nginx-debian.html <<HTML
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Terraform VM</title>
+    </head>
+    <body>
+        <h1>${each.key}</h1>
+        <h2>Nginx Server</h2>
+        <p>Deployed automatically using Terraform</p>
+    </body>
+    </html>
+    HTML
+
+    systemctl restart nginx
+  EOF
+  )
 }
+
